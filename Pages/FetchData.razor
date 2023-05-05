@@ -1,0 +1,27 @@
+﻿@page "/fetchdata"
+
+@inject ChatbotService ChatbotService
+@using FinPorfolioAnylizer.Data
+
+<h1>Anylize your portfolio</h1>
+<p>This component demonstrates fetching data from a ChatGPT.</p>
+
+<div>
+    <label for="message">Enter message:</label>
+    <input id="message" @bind="@message" />
+    <button @onclick="@SendMessage">Send</button>
+    <label>Response:</label>
+    <textarea @bind="@response" readonly></textarea>
+</div>
+
+@code {
+    @code {
+        private string message = "Що таке фінанси?";
+        private string response = "";
+
+        private async Task SendMessage()
+        {
+            response = await ChatbotService.SendMessageAsync(message);
+        }
+    }
+}
