@@ -3,6 +3,7 @@ using FinPorfolioAnylizer.Data;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace FinPorfolioAnylizer;
 
@@ -19,7 +20,15 @@ public static class MauiProgram
 			});
         builder.Services.AddMauiBlazorWebView();
 
-        builder.Configuration.AddUserSecrets<MauiApp>();
+        var a = Assembly.GetExecutingAssembly();
+        using var stream = a.GetManifestResourceStream("FinPorfolioAnylizer.appsettings.json");
+
+        var config = new ConfigurationBuilder()
+                    .AddJsonStream(stream)
+                    .Build();
+
+
+        builder.Configuration.AddConfiguration(config);
 #if DEBUG
         AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
         {
@@ -31,13 +40,13 @@ public static class MauiProgram
 		
 		builder.Services.AddSingleton<WeatherForecastService>();
         builder.Services.AddScoped<ChatbotService>();
-        builder.Services.AddHttpClient<ChatbotService>((serviceProvider, client) =>
-		{
-			var config = serviceProvider.GetRequiredService<IConfiguration>();
-            client.BaseAddress = new Uri("https://api.openai.com");
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        });
+  //      builder.Services.AddHttpClient<ChatbotService>((serviceProvider, client) =>
+		//{
+		//	var config = serviceProvider.GetRequiredService<IConfiguration>();
+  //          client.BaseAddress = new Uri("https://api.openai.com");
+  //          client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
+  //          client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+  //      });
 
         return builder.Build();
 	}

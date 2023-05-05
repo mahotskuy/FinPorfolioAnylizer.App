@@ -2,10 +2,7 @@
   "profiles": {
     "Windows Machine": {
       "commandName": "MsixPackage",
-      "nativeDebugging": false,
-      "environmentVariables": {
-        "OPENAI_API_KEY": ""
-      }
+      "nativeDebugging": false
     }
   }
 }

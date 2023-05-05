@@ -1,39 +1,23 @@
 ﻿using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using OpenAI_API;
 
 public class ChatbotService
 {
-    private readonly HttpClient _httpClient;
+    private readonly IConfiguration _configuration;
 
-    public ChatbotService(HttpClient httpClient)
+    public ChatbotService(IConfiguration configuration)
     {
-        _httpClient = httpClient;
+        _configuration = configuration;
     }
 
     public async Task<string> SendMessageAsync(string message)
     {
-        var requestBody = new
-        {
-            prompt = message,
-            max_tokens = 50, // Adjust the token limit as needed
-            temperature = 0.7 // Adjust the temperature for more or less randomness
-        };
+        OpenAIAPI api = new OpenAIAPI("YOUR_API_KEY");
 
-        var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
-        var response = await _httpClient.PostAsync("https://api.openai.com/v4/engines/gpt-4.0/completions", content);
-
-        if (response.IsSuccessStatusCode)
-        {
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var responseObject = JsonConvert.DeserializeObject<dynamic>(responseContent);
-
-            return responseObject.choices[0].text.ToString();
-        }
-        else
-        {
-            throw new HttpRequestException($"Error: {response.ReasonPhrase}");
-        }
+        return "Some";
     }
 }
