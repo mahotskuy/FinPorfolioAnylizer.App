@@ -20,15 +20,8 @@ public static class MauiProgram
 			});
         builder.Services.AddMauiBlazorWebView();
 
-        var a = Assembly.GetExecutingAssembly();
-        using var stream = a.GetManifestResourceStream("FinPorfolioAnylizer.appsettings.json");
-
-        var config = new ConfigurationBuilder()
-                    .AddJsonStream(stream)
-                    .Build();
-
-
-        builder.Configuration.AddConfiguration(config);
+        builder.Configuration.AddConfiguration(GetJSONFileConfig("FinPorfolioAnylizer.appsettings.json"));
+        builder.Configuration.AddConfiguration(GetJSONFileConfig("FinPorfolioAnylizer.appsettings.development.json"));
 #if DEBUG
         AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
         {
@@ -50,4 +43,14 @@ public static class MauiProgram
 
         return builder.Build();
 	}
+
+	private static IConfiguration GetJSONFileConfig(string configName)
+	{
+        var a = Assembly.GetExecutingAssembly();
+        using var stream = a.GetManifestResourceStream(configName);
+
+        return new ConfigurationBuilder()
+                    .AddJsonStream(stream)
+                    .Build();
+    }
 }
