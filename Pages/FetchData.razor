@@ -63,13 +63,86 @@
             }
         };
 
+        private readonly Portfolio Balansed_portf = new Portfolio()
+        {
+            CustomerInfo = new CustomerInfo
+            {
+                Age = 27,
+            },
+            Assets = new List<Asset>
+            {
+                 new Asset(
+                    "Mono Deposit",
+                    AssetType.Deposit,
+                    TermOfAsset.UpTo3Months,
+                    Currency.UAH,
+                    Region.Ukraine,
+                    10000),
+                 new Asset(
+                    "Mono Account",
+                    AssetType.CurrentAccount,
+                    TermOfAsset.Current,
+                    Currency.USD,
+                    Region.Ukraine,
+                    1000),
+                new Asset(
+                    "Cash euro",
+                    AssetType.Cash,
+                    TermOfAsset.Current,
+                    Currency.EURO,
+                    Region.Ukraine,
+                    1000
+                ),
+                new Asset(
+                    "Ukraine Bonds",
+                    AssetType.Bonds,
+                    TermOfAsset.From1To3Years,
+                    Currency.UAH,
+                    Region.Ukraine,
+                    40000
+                ),
+                new Asset(
+                    "Land",
+                    AssetType.RealEstate,
+                    TermOfAsset.From1To3Years,
+                    Currency.UAH,
+                    Region.Ukraine,
+                    100000
+                ),
+                new Asset(
+                    "ETF S&P500",
+                    AssetType.ETF_Long,
+                    TermOfAsset.MoreThan10Years,
+                    Currency.USD,
+                    Region.US,
+                    5000
+                ),
+                new Asset(
+                    "ETF Word",
+                    AssetType.ETF_Long,
+                    TermOfAsset.MoreThan10Years,
+                    Currency.USD,
+                    Region.Asia,
+                    1000
+                ),
+                new Asset(
+                    "ETF Bond US",
+                    AssetType.ETF_Long,
+                    TermOfAsset.MoreThan10Years,
+                    Currency.USD,
+                    Region.US,
+                    2000
+                )
+            }
+        };
+
         private async Task SendMessage()
         {
             isLoading = true;
 
             try
             {
-                response = await FinanceAnalyzer.AnalyzePortfolio(CASH_ONLY_PORTF);
+                response = await FinanceAnalyzer.AnalyzePortfolio(Balansed_portf);
             }
             finally
             {

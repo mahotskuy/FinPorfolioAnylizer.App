@@ -1,10 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FinPorfolioAnylizer.Data
 {
@@ -28,10 +23,10 @@ namespace FinPorfolioAnylizer.Data
                 $"As a financial consultant analyze my financial assets." +
                 $"Analyze financial assets according to the following criteria:" +
                 $"- diversification by currency, country, types of assets, types of investments" +
-                $"- to return the portfolio" +
-                $"My portfolio serialized to json: {convertedPortfolio}" +
-                $"Generate suggestion of portfolio improvements based on investment tools available in Ukraine" +
-                $"згенеруй відповідь українською мовою";
+                $"- returns of the portfolio" +
+                $"Generate suggestion of portfolio improvements based on investment tools available in Ukraine." +
+                $"Згенеруй відповідь українською мовою а не російською." +
+                $"My portfolio serialized to json: {convertedPortfolio}";
             return _chatbotService.SendMessageAsync(message);
         }
     }
@@ -64,7 +59,7 @@ namespace FinPorfolioAnylizer.Data
     public enum Currency
     {
         USD,
-        EU,
+        EURO,
         UAH
     }
 
