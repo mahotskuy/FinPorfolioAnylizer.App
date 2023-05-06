@@ -23,16 +23,13 @@ public static class MauiProgram
         builder.Configuration.AddConfiguration(GetJSONFileConfig("FinPorfolioAnylizer.appsettings.json"));
         builder.Configuration.AddConfiguration(GetJSONFileConfig("FinPorfolioAnylizer.appsettings.development.json"));
 #if DEBUG
-        AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
-        {
-            // Log the exception, show an error dialog, etc.
-            Console.WriteLine($"Unhandled exception: {e.ExceptionObject}");
-        };
+        
         builder.Services.AddBlazorWebViewDeveloperTools();
 #endif
 		
 		builder.Services.AddSingleton<WeatherForecastService>();
         builder.Services.AddScoped<ChatbotService>();
+        builder.Services.AddScoped<FinanceAnalyzer>();
   //      builder.Services.AddHttpClient<ChatbotService>((serviceProvider, client) =>
 		//{
 		//	var config = serviceProvider.GetRequiredService<IConfiguration>();

@@ -1,27 +1,80 @@
 ﻿@page "/fetchdata"
 
-@inject ChatbotService ChatbotService
+@inject FinanceAnalyzer FinanceAnalyzer
 @using FinPorfolioAnylizer.Data
 
 <h1>Anylize your portfolio</h1>
 <p>This component demonstrates fetching data from a ChatGPT.</p>
 
-<div>
-    <label for="message">Enter message:</label>
-    <input id="message" @bind="@message" />
-    <button @onclick="@SendMessage">Send</button>
-    <label>Response:</label>
-    <textarea @bind="@response" readonly></textarea>
+<div class="form-container">
+    <button @onclick="@SendMessage">Analyze</button>
+    <div>
+        <label for="response">Response:</label>
+    </div>
+    <div>
+        @if (isLoading)
+        {
+            <div class="spinner"></div>
+        }
+        else
+        {
+            <div>
+                <textarea class="full-width" @bind="@response" readonly></textarea>
+            </div>
+        }
+    </div>
 </div>
 
 @code {
     @code {
-        private string message = "Що таке фінанси?";
+        private bool isLoading = false;
         private string response = "";
+
+        private readonly Portfolio CASH_ONLY_PORTF = new Portfolio
+        {
+            CustomerInfo = new CustomerInfo()
+            {
+                Age = 27
+            },
+            Assets = new List<Asset>
+            {
+                new Asset(
+                    "Mono Deposit",
+                    AssetType.Deposit,
+                    TermOfAsset.UpTo3Months,
+                    Currency.UAH,
+                    Region.Ukraine,
+                    10000),
+                 new Asset(
+                    "Mono Account",
+                    AssetType.CurrentAccount,
+                    TermOfAsset.Current,
+                    Currency.UAH,
+                    Region.Ukraine,
+                    50000),
+                    new Asset(
+                        "Cash euro",
+                        AssetType.Cash,
+                        TermOfAsset.Current,
+                        Currency.USD,
+                        Region.Ukraine,
+                        1000
+                    )
+            }
+        };
 
         private async Task SendMessage()
         {
-            response = await ChatbotService.SendMessageAsync(message);
+            isLoading = true;
+
+            try
+            {
+                response = await FinanceAnalyzer.AnalyzePortfolio(CASH_ONLY_PORTF);
+            }
+            finally
+            {
+                isLoading = false;
+            }
         }
     }
 }

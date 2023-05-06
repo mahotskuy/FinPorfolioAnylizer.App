@@ -17,7 +17,7 @@ public class ChatbotService
     public async Task<string> SendMessageAsync(string message)
     {
         OpenAIAPI api = new OpenAIAPI(_configuration["Settings:OpenAI:API_KEY"]);
-
-        return (await api.Chat.CreateChatCompletionAsync(message)).ToString();
+        var response = await api.Chat.CreateChatCompletionAsync(message);
+        return response.ToString();
     }
 }
