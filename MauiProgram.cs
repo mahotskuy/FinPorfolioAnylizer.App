@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using MudBlazor.Services;
 
 namespace FinPorfolioAnylizer;
 
@@ -30,13 +31,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<WeatherForecastService>();
         builder.Services.AddScoped<ChatbotService>();
         builder.Services.AddScoped<FinanceAnalyzer>();
-  //      builder.Services.AddHttpClient<ChatbotService>((serviceProvider, client) =>
-		//{
-		//	var config = serviceProvider.GetRequiredService<IConfiguration>();
-  //          client.BaseAddress = new Uri("https://api.openai.com");
-  //          client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "");
-  //          client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-  //      });
+        builder.Services.AddMudServices();
 
         return builder.Build();
 	}

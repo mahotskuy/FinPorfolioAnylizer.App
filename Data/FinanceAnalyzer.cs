@@ -33,9 +33,14 @@ namespace FinPorfolioAnylizer.Data
 
     public class Portfolio
     {
-        public CustomerInfo CustomerInfo { get; set; }
+        public CustomerInfo CustomerInfo { get; set; } = new();
 
-        public List<Asset> Assets { get; set; }
+        public List<Asset> Assets { get; set; } = new();
+    }
+
+    public class CustomerInfo
+    {
+        public int Age { get; set; }
     }
 
     public enum Region

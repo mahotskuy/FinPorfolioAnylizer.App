@@ -2,6 +2,7 @@
 
 @inject FinanceAnalyzer FinanceAnalyzer
 @using FinPorfolioAnylizer.Data
+@using MudBlazor
 
 <h1>Anylize your portfolio</h1>
 <p>This component demonstrates fetching data from a ChatGPT.</p>
@@ -24,6 +25,36 @@
         }
     </div>
 </div>
+
+<EditForm Model="@portfolio">
+    <MudPaper Class="p-4">
+        <MudTabs>
+            <MudTabPanel Text="Customer Info">
+                <MudTextField @bind-Value="@Balansed_portf.CustomerInfo.Age" Label="Age" Variant="Variant.Outlined" Adornment="Adornment.Start" />
+            </MudTabPanel>
+            <MudTabPanel Text="Assets">
+                <MudTable Items="@Balansed_portf.Assets" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+                    <HeaderContent>
+                        <MudTh>Name</MudTh>
+                        <MudTh>Asset Type</MudTh>
+                        <MudTh>Term of Asset</MudTh>
+                        <MudTh>Currency</MudTh>
+                        <MudTh>Region</MudTh>
+                        <MudTh>Amount</MudTh>
+                    </HeaderContent>
+                    <RowTemplate Context="item">
+                        <MudTd DataLabel="Name">@item.Name</MudTd>
+                        <MudTd DataLabel="Asset Type">@item.AssetType</MudTd>
+                        <MudTd DataLabel="Term of Asset">@item.TermOfAsset</MudTd>
+                        <MudTd DataLabel="Currency">@item.Currency</MudTd>
+                        <MudTd DataLabel="Region">@item.Region</MudTd>
+                        <MudTd DataLabel="Amount">@item.Amount</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudTabPanel>
+        </MudTabs>
+    </MudPaper>
+</EditForm>
 
 @code {
     @code {
@@ -135,6 +166,13 @@
                 )
             }
         };
+
+        private Portfolio portfolio = new Portfolio();
+
+        private void AddAsset()
+        {
+            portfolio.Assets.Add(new Asset("", AssetType.Cash, TermOfAsset.Current, Currency.USD, Region.Ukraine, 0m));
+        }
 
         private async Task SendMessage()
         {
