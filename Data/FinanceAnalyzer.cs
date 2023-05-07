@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace FinPorfolioAnylizer.Data
+namespace FinPortfolioAnalyzer.Data
 {
     public class FinanceAnalyzer
     {

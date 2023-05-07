@@ -1,4 +1,4 @@
-﻿namespace FinPorfolioAnylizer;
+﻿namespace FinPortfolioAnalyzer;
 
 public partial class MainPage : ContentPage
 {
