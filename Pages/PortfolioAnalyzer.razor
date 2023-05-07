@@ -1,4 +1,4 @@
-﻿@page "/fetchdata"
+﻿@page "/portfolio-analyzer"
 
 @inject FinanceAnalyzer FinanceAnalyzer
 @using FinPorfolioAnylizer.Data
@@ -6,14 +6,36 @@
 
 <h1>Anylize your portfolio</h1>
 
-<EditForm Model="@portfolio">
+<div class="predefined-portfolio-selection">
+    <MudCard Class="m-4">
+        <MudCardContent>
+            <MudText Typo="Typo.h5">Check predefined examples</MudText>
+        </MudCardContent>
+        <MudCardActions>
+            <MudGrid>
+                <MudItem xs="8" Class="d-flex align-center">
+                    <MudText>If you don't know how to fill portfolio you can select one of predefined examples.</MudText>
+                </MudItem>
+                <MudItem xs="4">
+                    <MudSelect Style="height: 50px" T="Portfolio" @bind-Value="_displayedPortfolio" Variant="Variant.Outlined" Class="m-1">
+                        <MudSelectItem Value="@(CashOnly_Portfolio)">Cash Only Portfolio</MudSelectItem>
+                        <MudSelectItem Value="@(Balansed_Portfolio)">Balanced Portfolio</MudSelectItem>
+                        <MudSelectItem Value="@(User_Portfolio)">Your Portfolio</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+        </MudCardActions>
+    </MudCard>
+</div>
+
+<EditForm Model="@_displayedPortfolio">
     <MudPaper Class="p-4">
         <MudTabs>
             <MudTabPanel Text="Customer Info">
-                <MudTextField @bind-Value="@portfolio.CustomerInfo.Age" Label="Age" Variant="Variant.Outlined" Adornment="Adornment.Start" />
+                <MudTextField @bind-Value="@_displayedPortfolio.CustomerInfo.Age" Label="Age" Variant="Variant.Outlined" Adornment="Adornment.Start" />
             </MudTabPanel>
             <MudTabPanel Text="Assets">
-                <MudTable Items="@Balansed_portf.Assets" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+                <MudTable Items="@_displayedPortfolio.Assets" FixedHeader="true" HorizontalScrollbar="true" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
                     <HeaderContent>
                         <MudTh>Name</MudTh>
                         <MudTh>Asset Type</MudTh>
@@ -21,24 +43,22 @@
                         <MudTh>Currency</MudTh>
                         <MudTh>Region</MudTh>
                         <MudTh>Amount</MudTh>
-                        <MudTh>
-                            <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="@AddNewAsset">Add</MudButton>
-                        </MudTh>
+                        <MudTh></MudTh>
                     </HeaderContent>
                     <RowTemplate Context="item">
-                        <MudTd DataLabel="Name">
+                        <MudTd>
                             <MudTextField @bind-Value="@item.Name" Immediate="true" Variant="Variant.Text" />
                         </MudTd>
-                        <MudTd DataLabel="Asset Type">
-                            <MudSelect T="AssetType" Label="Asset Type" @bind-Value="@item.AssetType">
+                        <MudTd>
+                            <MudSelect T="AssetType" @bind-Value="@item.AssetType">
                                 @foreach (AssetType assetType in Enum.GetValues(typeof(AssetType)))
                                 {
                                     <MudSelectItem Value="@assetType">@assetType</MudSelectItem>
                                 }
                             </MudSelect>
                         </MudTd>
-                        <MudTd DataLabel="Term of Asset">
-                            <MudSelect T="TermOfAsset" Label="Term of Asset" @bind-Value="@item.TermOfAsset">
+                        <MudTd>
+                            <MudSelect T="TermOfAsset" @bind-Value="@item.TermOfAsset">
                                 @foreach (TermOfAsset termOfAsset in Enum.GetValues(typeof(TermOfAsset)))
                                 {
                                     <MudSelectItem Value="@termOfAsset">@termOfAsset</MudSelectItem>
@@ -46,41 +66,49 @@
                             </MudSelect>
                         </MudTd>
                         <MudTd DataLabel="Currency">
-                            <MudSelect T="Currency" Label="Currency" @bind-Value="@item.Currency">
+                            <MudSelect T="Currency" @bind-Value="@item.Currency">
                                 @foreach (Currency currency in Enum.GetValues(typeof(Currency)))
                                 {
                                     <MudSelectItem Value="@currency">@currency</MudSelectItem>
                                 }
                             </MudSelect>
                         </MudTd>
-                        <MudTd DataLabel="Region">
-                            <MudSelect T="Region" Label="Region" @bind-Value="@item.Region">
+                        <MudTd>
+                            <MudSelect T="Region" @bind-Value="@item.Region">
                                 @foreach (Region region in Enum.GetValues(typeof(Region)))
                                 {
                                     <MudSelectItem Value="@region">@region</MudSelectItem>
                                 }
                             </MudSelect>
                         </MudTd>
-                        <MudTd DataLabel="Amount">
+                        <MudTd>
                             <MudNumericField @bind-Value="@item.Amount" Immediate="true" Variant="Variant.Text" />
                         </MudTd>
                         <MudTd>
-                            <MudButton Color="Color.Secondary" Variant="Variant.Outlined" OnClick="@(() => RemoveAsset(item))">Delete</MudButton>
+                            <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" Variant="Variant.Outlined" OnClick="@(() => RemoveAsset(item))"></MudIconButton>
                         </MudTd>
                     </RowTemplate>
                 </MudTable>
+                <MudIconButton Icon="@Icons.Material.Filled.Add"
+                               Color="Color.Primary"
+                               Variant="Variant.Outlined"
+                               OnClick="@AddNewAsset"
+                               aria-label="Add"
+                               Class="mt-2">
+                </MudIconButton>
             </MudTabPanel>
             <MudTabPanel Text="Analyzes">
                 <MudButton OnClick="@SendMessage" Variant="Variant.Filled" Color="Color.Primary">Analyze</MudButton>
-                <MudText>Response:</MudText>
-                @if (isLoading)
-                {
-                    <MudProgressCircular Color="Color.Info" Indeterminate="true" />
-                }
-                else
-                {
-                    <MudTextField T="string" Label="Response" Variant="Variant.Text" Text="@response" Lines="15" />
-                }
+                <MudPaper Class="p-1">
+                    @if (isLoading)
+                    {
+                        <MudProgressCircular Color="Color.Info" Indeterminate="true" />
+                    }
+                    else
+                    {
+                        <MudTextField T="string" Label="Response" Variant="Variant.Outlined" Text="@response" Lines="15" />
+                    }
+                </MudPaper>
             </MudTabPanel>
         </MudTabs>
     </MudPaper>
@@ -91,7 +119,7 @@
         private bool isLoading = false;
         private string response = "";
 
-        private readonly Portfolio CASH_ONLY_PORTF = new Portfolio
+        private readonly Portfolio CashOnly_Portfolio = new Portfolio
         {
             CustomerInfo = new CustomerInfo()
             {
@@ -124,7 +152,7 @@
             }
         };
 
-        private readonly Portfolio Balansed_portf = new Portfolio()
+        private readonly Portfolio Balansed_Portfolio = new Portfolio()
         {
             CustomerInfo = new CustomerInfo
             {
@@ -197,22 +225,23 @@
             }
         };
 
-        private Portfolio portfolio;
+        private readonly Portfolio User_Portfolio = new Portfolio();
+
+        private Portfolio _displayedPortfolio;
 
         protected override void OnInitialized()
         {
-            portfolio = Balansed_portf;
+            _displayedPortfolio = User_Portfolio;
         }
-
 
         private void AddNewAsset()
         {
-            portfolio.Assets.Add(new Asset("", AssetType.Cash, TermOfAsset.Current, Currency.UAH, Region.Ukraine, 0));
+            _displayedPortfolio.Assets.Add(new Asset("", AssetType.Cash, TermOfAsset.Current, Currency.UAH, Region.Ukraine, 0));
         }
 
         private void RemoveAsset(Asset asset)
         {
-            portfolio.Assets.Remove(asset);
+            _displayedPortfolio.Assets.Remove(asset);
         }
 
         private async Task SendMessage()
@@ -221,7 +250,7 @@
 
             try
             {
-                response = await FinanceAnalyzer.AnalyzePortfolio(portfolio);
+                response = await FinanceAnalyzer.AnalyzePortfolio(_displayedPortfolio);
             }
             finally
             {

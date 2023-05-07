@@ -1,7 +1,26 @@
 ﻿@page "/"
+@using MudBlazor
 
-<h1>Hello, world!</h1>
+<MudContainer>
+    <MudPaper Elevation="1" Class="p-4 my-4">
+        <MudText Typo="Typo.h4" GutterBottom="true">Welcome to the Portfolio Analyzer</MudText>
+        <MudText>
+            The Portfolio Analyzer is a powerful tool designed to help you analyze and optimize your investment portfolio. By providing detailed information about your assets and financial goals, our AI-driven analysis will offer insights and recommendations for achieving your desired results.
+        </MudText>
 
-Welcome to your new app.
+        <MudText Typo="Typo.h5" GutterBottom="true" Class="mt-4">How to use the application:</MudText>
+        <MudText>
+            <ol>
+                <li>Navigate to the <strong>Customer Info</strong> tab and enter your age.</li>
+                <li>Proceed to the <strong>Assets</strong> tab to input details about your current assets, such as asset type, term, currency, region, and amount. Click the "+" button to add new assets to the table.</li>
+                <li>Once you have completed entering your information, go to the <strong>Analyzes</strong> tab and click the <strong>Analyze</strong> button.</li>
+                <li>Wait for the AI-driven analysis to complete, and then review the results in the provided text area.</li>
+                <li>Use the insights and recommendations to make informed decisions about your investment strategy and optimize your portfolio for maximum growth.</li>
+            </ol>
+        </MudText>
+        <MudText>
+            We hope you find the Portfolio Analyzer to be a valuable resource in managing your investments and achieving your financial goals. If you have any questions or need assistance, feel free to reach out to our support team.
+        </MudText>
+    </MudPaper>
+</MudContainer>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
