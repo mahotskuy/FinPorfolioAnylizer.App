@@ -5,32 +5,12 @@
 @using MudBlazor
 
 <h1>Anylize your portfolio</h1>
-<p>This component demonstrates fetching data from a ChatGPT.</p>
-
-<div class="form-container">
-    <button @onclick="@SendMessage">Analyze</button>
-    <div>
-        <label for="response">Response:</label>
-    </div>
-    <div>
-        @if (isLoading)
-        {
-            <div class="spinner"></div>
-        }
-        else
-        {
-            <div>
-                <textarea class="full-width" @bind="@response" readonly></textarea>
-            </div>
-        }
-    </div>
-</div>
 
 <EditForm Model="@portfolio">
     <MudPaper Class="p-4">
         <MudTabs>
             <MudTabPanel Text="Customer Info">
-                <MudTextField @bind-Value="@Balansed_portf.CustomerInfo.Age" Label="Age" Variant="Variant.Outlined" Adornment="Adornment.Start" />
+                <MudTextField @bind-Value="@portfolio.CustomerInfo.Age" Label="Age" Variant="Variant.Outlined" Adornment="Adornment.Start" />
             </MudTabPanel>
             <MudTabPanel Text="Assets">
                 <MudTable Items="@Balansed_portf.Assets" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
@@ -41,16 +21,66 @@
                         <MudTh>Currency</MudTh>
                         <MudTh>Region</MudTh>
                         <MudTh>Amount</MudTh>
+                        <MudTh>
+                            <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="@AddNewAsset">Add</MudButton>
+                        </MudTh>
                     </HeaderContent>
                     <RowTemplate Context="item">
-                        <MudTd DataLabel="Name">@item.Name</MudTd>
-                        <MudTd DataLabel="Asset Type">@item.AssetType</MudTd>
-                        <MudTd DataLabel="Term of Asset">@item.TermOfAsset</MudTd>
-                        <MudTd DataLabel="Currency">@item.Currency</MudTd>
-                        <MudTd DataLabel="Region">@item.Region</MudTd>
-                        <MudTd DataLabel="Amount">@item.Amount</MudTd>
+                        <MudTd DataLabel="Name">
+                            <MudTextField @bind-Value="@item.Name" Immediate="true" Variant="Variant.Text" />
+                        </MudTd>
+                        <MudTd DataLabel="Asset Type">
+                            <MudSelect T="AssetType" Label="Asset Type" @bind-Value="@item.AssetType">
+                                @foreach (AssetType assetType in Enum.GetValues(typeof(AssetType)))
+                                {
+                                    <MudSelectItem Value="@assetType">@assetType</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudTd>
+                        <MudTd DataLabel="Term of Asset">
+                            <MudSelect T="TermOfAsset" Label="Term of Asset" @bind-Value="@item.TermOfAsset">
+                                @foreach (TermOfAsset termOfAsset in Enum.GetValues(typeof(TermOfAsset)))
+                                {
+                                    <MudSelectItem Value="@termOfAsset">@termOfAsset</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudTd>
+                        <MudTd DataLabel="Currency">
+                            <MudSelect T="Currency" Label="Currency" @bind-Value="@item.Currency">
+                                @foreach (Currency currency in Enum.GetValues(typeof(Currency)))
+                                {
+                                    <MudSelectItem Value="@currency">@currency</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudTd>
+                        <MudTd DataLabel="Region">
+                            <MudSelect T="Region" Label="Region" @bind-Value="@item.Region">
+                                @foreach (Region region in Enum.GetValues(typeof(Region)))
+                                {
+                                    <MudSelectItem Value="@region">@region</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudTd>
+                        <MudTd DataLabel="Amount">
+                            <MudNumericField @bind-Value="@item.Amount" Immediate="true" Variant="Variant.Text" />
+                        </MudTd>
+                        <MudTd>
+                            <MudButton Color="Color.Secondary" Variant="Variant.Outlined" OnClick="@(() => RemoveAsset(item))">Delete</MudButton>
+                        </MudTd>
                     </RowTemplate>
                 </MudTable>
+            </MudTabPanel>
+            <MudTabPanel Text="Analyzes">
+                <MudButton OnClick="@SendMessage" Variant="Variant.Filled" Color="Color.Primary">Analyze</MudButton>
+                <MudText>Response:</MudText>
+                @if (isLoading)
+                {
+                    <MudProgressCircular Color="Color.Info" Indeterminate="true" />
+                }
+                else
+                {
+                    <MudTextField T="string" Label="Response" Variant="Variant.Text" Text="@response" Lines="15" />
+                }
             </MudTabPanel>
         </MudTabs>
     </MudPaper>
@@ -167,11 +197,22 @@
             }
         };
 
-        private Portfolio portfolio = new Portfolio();
+        private Portfolio portfolio;
 
-        private void AddAsset()
+        protected override void OnInitialized()
         {
-            portfolio.Assets.Add(new Asset("", AssetType.Cash, TermOfAsset.Current, Currency.USD, Region.Ukraine, 0m));
+            portfolio = Balansed_portf;
+        }
+
+
+        private void AddNewAsset()
+        {
+            portfolio.Assets.Add(new Asset("", AssetType.Cash, TermOfAsset.Current, Currency.UAH, Region.Ukraine, 0));
+        }
+
+        private void RemoveAsset(Asset asset)
+        {
+            portfolio.Assets.Remove(asset);
         }
 
         private async Task SendMessage()
@@ -180,7 +221,7 @@
 
             try
             {
-                response = await FinanceAnalyzer.AnalyzePortfolio(Balansed_portf);
+                response = await FinanceAnalyzer.AnalyzePortfolio(portfolio);
             }
             finally
             {

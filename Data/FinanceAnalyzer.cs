@@ -52,13 +52,26 @@ namespace FinPorfolioAnylizer.Data
         Asia
     }
 
-    public record Asset(
-        string Name, 
-        AssetType AssetType, 
-        TermOfAsset TermOfAsset, 
-        Currency Currency,
-        Region Region, 
-        decimal Amount);
+    public class Asset
+    {
+        public string Name { get; set; }
+        public AssetType AssetType { get; set; }
+        public TermOfAsset TermOfAsset { get; set; }
+        public Currency Currency { get; set; }
+        public Region Region { get; set; }
+        public decimal Amount { get; set; }
+
+        public Asset(string name, AssetType assetType, TermOfAsset termOfAsset, Currency currency, Region region, decimal amount)
+        {
+            Name = name;
+            AssetType = assetType;
+            TermOfAsset = termOfAsset;
+            Currency = currency;
+            Region = region;
+            Amount = amount;
+        }
+    }
+ ;
 
 
     public enum Currency
