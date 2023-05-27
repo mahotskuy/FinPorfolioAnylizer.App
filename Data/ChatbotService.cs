@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using OpenAI_API;
 using OpenAI_API.Chat;
+using OpenAI_API.Models;
 
 public class ChatbotService
 {
@@ -17,6 +18,7 @@ public class ChatbotService
         var chatRequest = new ChatRequest()
         {
             Temperature = 0,
+            Model = Model.ChatGPTTurbo,
             Messages = new List<ChatMessage>
             {
                 new ChatMessage
@@ -32,17 +34,26 @@ public class ChatbotService
             }
         };
 
-        var response = await api.Chat.CreateChatCompletionAsync(chatRequest);
-
-        var responseMessage = response.ToString();
-
-        var reTryCount = 0;
-        if (response.Choices[0].FinishReason != "stop" && reTryCount < 3)
+        string responseMessage;
+        try
         {
-            response = await api.Chat.CreateChatCompletionAsync("continue");
-            responseMessage += response.ToString();
-            reTryCount++;
+            var response = await api.Chat.CreateChatCompletionAsync(chatRequest);
+
+            responseMessage = response.ToString();
+
+            var reTryCount = 0;
+            while (response.Choices[0].FinishReason != "stop" && reTryCount < 3)
+            {
+                response = await api.Chat.CreateChatCompletionAsync("continue");
+                responseMessage += response.ToString();
+                reTryCount++;
+            }
         }
+        catch (Exception ex)
+        {
+            responseMessage = $"Exception occurred: {ex.Message}";
+        }
+
         return responseMessage;
     }
 }

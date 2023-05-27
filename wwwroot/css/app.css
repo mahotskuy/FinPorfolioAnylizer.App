@@ -1,5 +1,21 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+.flex-container {
+    display: flex;
+}
+
+.flex-item-grow {
+    flex-grow: 1;
+}
+
+.flex-item-fixed {
+    flex-basis: 100px;
+}
+
+.w-100 {
+    width: 100%;
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }

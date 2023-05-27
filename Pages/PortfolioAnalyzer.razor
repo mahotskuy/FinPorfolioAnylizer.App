@@ -39,6 +39,9 @@
                         <MudSelectItem Value="@riskTolerance">@riskTolerance</MudSelectItem>
                     }
                 </MudSelect>
+                <FinPortfolioAnalyzer.Components.Money MoneyValue="@_displayedPortfolio.CustomerInfo.AnnualIncome" Label="AnnualIncome" Variant="Variant.Outlined"></FinPortfolioAnalyzer.Components.Money>
+                <FinPortfolioAnalyzer.Components.Money MoneyValue="@_displayedPortfolio.CustomerInfo.MonthlyExpenses" Label="MonthlyExpenses" Variant="Variant.Outlined"></FinPortfolioAnalyzer.Components.Money>
+                <FinPortfolioAnalyzer.Components.Money MoneyValue="@_displayedPortfolio.CustomerInfo.TotalLiabilities" Label="TotalLiabilities" Variant="Variant.Outlined"></FinPortfolioAnalyzer.Components.Money>
             </MudTabPanel>
             <MudTabPanel Text="Financial Goals">
                 <MudText Typo="Typo.h5">Financial Goals</MudText>
@@ -55,7 +58,7 @@
                             <MudTextField @bind-Value="@goal.GoalName" Immediate="true" Variant="Variant.Text" />
                         </MudTd>
                         <MudTd>
-                            <FinPortfolioAnalyzer.Components.Money MoneyValue="@goal.TargetAmount"></FinPortfolioAnalyzer.Components.Money>
+                            <FinPortfolioAnalyzer.Components.Money MoneyValue="@goal.TargetAmount" Label="TargetAmount"></FinPortfolioAnalyzer.Components.Money>
                         </MudTd>
                         <MudTd>
                             <MudDatePicker @bind-Date="@goal.TargetDate" />
@@ -115,7 +118,7 @@
                             </MudSelect>
                         </MudTd>
                         <MudTd>
-                            <FinPortfolioAnalyzer.Components.Money MoneyValue="@item.Amount"></FinPortfolioAnalyzer.Components.Money>
+                            <FinPortfolioAnalyzer.Components.Money MoneyValue="@item.Amount" Label="Amount"></FinPortfolioAnalyzer.Components.Money>
                         </MudTd>
                         <MudTd>
                             <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" Variant="Variant.Outlined" OnClick="@(() => RemoveAsset(item))"></MudIconButton>
@@ -157,7 +160,33 @@
             CustomerInfo = new CustomerInfo()
             {
                 Age = 27,
-                RiskTolerance = RiskTolerance.Low
+                RiskTolerance = RiskTolerance.Low,
+                AnnualIncome = new MoneyValue(1500, Currency.USD),
+                MonthlyExpenses = new MoneyValue(500, Currency.USD)
+            },
+            FinancialGoals = new List<FinancialGoal>
+            {
+                new FinancialGoal()
+                {
+                    GoalName = "Appartments",
+                    TargetAmount= new MoneyValue(1500000, Currency.UAH),
+                    TargetDate = DateTime.Now.AddYears(3),
+                    PriorityLevel = 1
+                },
+                new FinancialGoal()
+                {
+                    GoalName = "Car",
+                    TargetAmount= new MoneyValue(10000, Currency.USD),
+                    TargetDate = DateTime.Now.AddYears(1),
+                    PriorityLevel = 3
+                },
+                new FinancialGoal()
+                {
+                    GoalName = "Retirerment",
+                    TargetAmount= new MoneyValue(200000, Currency.USD),
+                    TargetDate = DateTime.Now.AddYears(30),
+                    PriorityLevel = 1
+                }
             },
             Assets = new List<Asset>
             {
@@ -189,14 +218,16 @@
             CustomerInfo = new CustomerInfo
             {
                 Age = 27,
-                RiskTolerance = RiskTolerance.High
+                RiskTolerance = RiskTolerance.High,
+                AnnualIncome = new MoneyValue(1500, Currency.USD),
+                MonthlyExpenses = new MoneyValue(500, Currency.USD)
             },
             FinancialGoals = new List<FinancialGoal>
             {
                 new FinancialGoal()
                 {
                     GoalName = "Appartments",
-                    TargetAmount= new MoneyValue(60000, Currency.UAH),
+                    TargetAmount= new MoneyValue(1700000, Currency.UAH),
                     TargetDate = DateTime.Now.AddYears(3),
                     PriorityLevel = 1
                 },

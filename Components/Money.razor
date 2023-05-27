@@ -1,18 +1,28 @@
 ﻿@using FinPortfolioAnalyzer.Data;
 
-<EditForm Model="MoneyValue">
-    <MudNumericField @bind-Value="@MoneyValue.Amount" Immediate="true" Variant="Variant.Text" />
-    <MudSelect T="Currency" @bind-Value="@MoneyValue.Currency">
+<div class="flex-container">
+    <div class="flex-item-grow">
+        <MudNumericField Label="@Label" @bind-Value="@MoneyValue.Amount" Immediate="true" Variant="@Variant" Class="w-100" />
+    </div>
+    <div class="flex-item-fixed-100">
+        <MudSelect Label="Currency" T="Currency" @bind-Value="@MoneyValue.Currency" Variant="@Variant" Class="w-100">
         @foreach (Currency currency in Enum.GetValues(typeof(Currency)))
         {
             <MudSelectItem Value="@currency">@currency</MudSelectItem>
         }
     </MudSelect>
-</EditForm>
+    </div>
+</div>
 
 @code {
     [Parameter]
     public MoneyValue MoneyValue { get; set; }
+
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public Variant Variant { get; set; }
 
     [Parameter]
     public EventCallback<MoneyValue> MoneyValueChanged { get; set; }
