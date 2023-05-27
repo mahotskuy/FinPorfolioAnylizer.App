@@ -1,0 +1,32 @@
+﻿@using FinPortfolioAnalyzer.Data;
+
+<EditForm Model="MoneyValue">
+    <MudNumericField @bind-Value="@MoneyValue.Amount" Immediate="true" Variant="Variant.Text" />
+    <MudSelect T="Currency" @bind-Value="@MoneyValue.Currency">
+        @foreach (Currency currency in Enum.GetValues(typeof(Currency)))
+        {
+            <MudSelectItem Value="@currency">@currency</MudSelectItem>
+        }
+    </MudSelect>
+</EditForm>
+
+@code {
+    [Parameter]
+    public MoneyValue MoneyValue { get; set; }
+
+    [Parameter]
+    public EventCallback<MoneyValue> MoneyValueChanged { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await MoneyValueChanged.InvokeAsync(MoneyValue);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await MoneyValueChanged.InvokeAsync(MoneyValue);
+        }
+    }
+}

@@ -33,6 +33,48 @@
         <MudTabs>
             <MudTabPanel Text="Customer Info">
                 <MudTextField @bind-Value="@_displayedPortfolio.CustomerInfo.Age" Label="Age" Variant="Variant.Outlined" Adornment="Adornment.Start" />
+                <MudSelect T="RiskTolerance" Label="Investor Risk Tolerance Level" @bind-Value="_displayedPortfolio.CustomerInfo.RiskTolerance" Variant="Variant.Outlined">
+                    @foreach (RiskTolerance riskTolerance in Enum.GetValues(typeof(RiskTolerance)))
+                    {
+                        <MudSelectItem Value="@riskTolerance">@riskTolerance</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudTabPanel>
+            <MudTabPanel Text="Financial Goals">
+                <MudText Typo="Typo.h5">Financial Goals</MudText>
+                <MudTable Items="@_displayedPortfolio.FinancialGoals" FixedHeader="true" HorizontalScrollbar="true" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+                    <HeaderContent>
+                        <MudTh>Goal Name</MudTh>
+                        <MudTh>Target Amount</MudTh>
+                        <MudTh>Target Date</MudTh>
+                        <MudTh>Priority Level</MudTh>
+                        <MudTh></MudTh>
+                    </HeaderContent>
+                    <RowTemplate Context="goal">
+                        <MudTd>
+                            <MudTextField @bind-Value="@goal.GoalName" Immediate="true" Variant="Variant.Text" />
+                        </MudTd>
+                        <MudTd>
+                            <FinPortfolioAnalyzer.Components.Money MoneyValue="@goal.TargetAmount"></FinPortfolioAnalyzer.Components.Money>
+                        </MudTd>
+                        <MudTd>
+                            <MudDatePicker @bind-Date="@goal.TargetDate" />
+                        </MudTd>
+                        <MudTd>
+                            <MudSlider Ticks="@true" TicksSnapBounds="1" Step="1" @bind-Value="@goal.PriorityLevel" Min="1" Max="5" />
+                        </MudTd>
+                        <MudTd>
+                            <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" Variant="Variant.Outlined" OnClick="@(() => RemoveGoal(goal))"></MudIconButton>
+                        </MudTd>
+                    </RowTemplate>
+                </MudTable>
+                <MudIconButton Icon="@Icons.Material.Filled.Add"
+                               Color="Color.Primary"
+                               Variant="Variant.Outlined"
+                               OnClick="@AddNewGoal"
+                               aria-label="Add"
+                               Class="mt-2">
+                </MudIconButton>
             </MudTabPanel>
             <MudTabPanel Text="Assets">
                 <MudTable Items="@_displayedPortfolio.Assets" FixedHeader="true" HorizontalScrollbar="true" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
@@ -40,7 +82,6 @@
                         <MudTh>Name</MudTh>
                         <MudTh>Asset Type</MudTh>
                         <MudTh>Term of Asset</MudTh>
-                        <MudTh>Currency</MudTh>
                         <MudTh>Region</MudTh>
                         <MudTh>Amount</MudTh>
                         <MudTh></MudTh>
@@ -65,14 +106,6 @@
                                 }
                             </MudSelect>
                         </MudTd>
-                        <MudTd DataLabel="Currency">
-                            <MudSelect T="Currency" @bind-Value="@item.Currency">
-                                @foreach (Currency currency in Enum.GetValues(typeof(Currency)))
-                                {
-                                    <MudSelectItem Value="@currency">@currency</MudSelectItem>
-                                }
-                            </MudSelect>
-                        </MudTd>
                         <MudTd>
                             <MudSelect T="Region" @bind-Value="@item.Region">
                                 @foreach (Region region in Enum.GetValues(typeof(Region)))
@@ -82,7 +115,7 @@
                             </MudSelect>
                         </MudTd>
                         <MudTd>
-                            <MudNumericField @bind-Value="@item.Amount" Immediate="true" Variant="Variant.Text" />
+                            <FinPortfolioAnalyzer.Components.Money MoneyValue="@item.Amount"></FinPortfolioAnalyzer.Components.Money>
                         </MudTd>
                         <MudTd>
                             <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" Variant="Variant.Outlined" OnClick="@(() => RemoveAsset(item))"></MudIconButton>
@@ -106,7 +139,7 @@
                     }
                     else
                     {
-                        <MudTextField T="string" Label="Response" Variant="Variant.Outlined" Text="@response" Lines="15" />
+                        <MudTextField T="string" Label="Response" ReadOnly="true" Variant="Variant.Outlined" Text="@response" Lines="15" />
                     }
                 </MudPaper>
             </MudTabPanel>
@@ -123,7 +156,8 @@
         {
             CustomerInfo = new CustomerInfo()
             {
-                Age = 27
+                Age = 27,
+                RiskTolerance = RiskTolerance.Low
             },
             Assets = new List<Asset>
             {
@@ -131,24 +165,22 @@
                     "Mono Deposit",
                     AssetType.Deposit,
                     TermOfAsset.UpTo3Months,
-                    Currency.UAH,
                     Region.Ukraine,
-                    10000),
+                    new MoneyValue(10000, Currency.UAH)
+                ),
                  new Asset(
                     "Mono Account",
                     AssetType.CurrentAccount,
                     TermOfAsset.Current,
-                    Currency.UAH,
                     Region.Ukraine,
-                    50000),
-                    new Asset(
-                        "Cash euro",
-                        AssetType.Cash,
-                        TermOfAsset.Current,
-                        Currency.USD,
-                        Region.Ukraine,
-                        1000
-                    )
+                     new MoneyValue(50000, Currency.UAH)),
+                 new Asset(
+                    "Cash euro",
+                    AssetType.Cash,
+                    TermOfAsset.Current,
+                    Region.Ukraine,
+                    new MoneyValue(1000, Currency.USD)
+                )
             }
         };
 
@@ -157,6 +189,31 @@
             CustomerInfo = new CustomerInfo
             {
                 Age = 27,
+                RiskTolerance = RiskTolerance.High
+            },
+            FinancialGoals = new List<FinancialGoal>
+            {
+                new FinancialGoal()
+                {
+                    GoalName = "Appartments",
+                    TargetAmount= new MoneyValue(60000, Currency.UAH),
+                    TargetDate = DateTime.Now.AddYears(3),
+                    PriorityLevel = 1
+                },
+                new FinancialGoal()
+                {
+                    GoalName = "Car",
+                    TargetAmount= new MoneyValue(10000, Currency.USD),
+                    TargetDate = DateTime.Now.AddYears(1),
+                    PriorityLevel = 3
+                },
+                new FinancialGoal()
+                {
+                    GoalName = "Retirerment",
+                    TargetAmount= new MoneyValue(200000, Currency.USD),
+                    TargetDate = DateTime.Now.AddYears(30),
+                    PriorityLevel = 1
+                }
             },
             Assets = new List<Asset>
             {
@@ -164,63 +221,55 @@
                     "Mono Deposit",
                     AssetType.Deposit,
                     TermOfAsset.UpTo3Months,
-                    Currency.UAH,
                     Region.Ukraine,
-                    10000),
+                    new MoneyValue(200000, Currency.UAH)),
                  new Asset(
                     "Mono Account",
                     AssetType.CurrentAccount,
                     TermOfAsset.Current,
-                    Currency.USD,
                     Region.Ukraine,
-                    1000),
+                    new MoneyValue(1000, Currency.USD)),
                 new Asset(
                     "Cash euro",
                     AssetType.Cash,
                     TermOfAsset.Current,
-                    Currency.EURO,
                     Region.Ukraine,
-                    1000
+                    new MoneyValue(1000, Currency.EURO)
                 ),
                 new Asset(
                     "Ukraine Bonds",
                     AssetType.Bonds,
                     TermOfAsset.From1To3Years,
-                    Currency.UAH,
                     Region.Ukraine,
-                    40000
+                     new MoneyValue(40000, Currency.UAH)
                 ),
                 new Asset(
                     "Land",
                     AssetType.RealEstate,
                     TermOfAsset.From1To3Years,
-                    Currency.UAH,
                     Region.Ukraine,
-                    100000
+                    new MoneyValue(100000, Currency.UAH)
                 ),
                 new Asset(
                     "ETF S&P500",
                     AssetType.ETF_Long,
                     TermOfAsset.MoreThan10Years,
-                    Currency.USD,
                     Region.US,
-                    5000
+                    new MoneyValue(5000, Currency.USD)
                 ),
                 new Asset(
                     "ETF Word",
                     AssetType.ETF_Long,
                     TermOfAsset.MoreThan10Years,
-                    Currency.USD,
                     Region.Asia,
-                    1000
+                    new MoneyValue(1000, Currency.USD)
                 ),
                 new Asset(
                     "ETF Bond US",
                     AssetType.ETF_Long,
                     TermOfAsset.MoreThan10Years,
-                    Currency.USD,
                     Region.US,
-                    2000
+                    new MoneyValue(2000, Currency.USD)
                 )
             }
         };
@@ -236,12 +285,22 @@
 
         private void AddNewAsset()
         {
-            _displayedPortfolio.Assets.Add(new Asset("", AssetType.Cash, TermOfAsset.Current, Currency.UAH, Region.Ukraine, 0));
+            _displayedPortfolio.Assets.Add(new Asset("", AssetType.Cash, TermOfAsset.Current, Region.Ukraine, new MoneyValue()));
         }
 
         private void RemoveAsset(Asset asset)
         {
             _displayedPortfolio.Assets.Remove(asset);
+        }
+
+        void AddNewGoal()
+        {
+            _displayedPortfolio.FinancialGoals.Add(new FinancialGoal());
+        }
+
+        void RemoveGoal(FinancialGoal goal)
+        {
+            _displayedPortfolio.FinancialGoals.Remove(goal);
         }
 
         private async Task SendMessage()

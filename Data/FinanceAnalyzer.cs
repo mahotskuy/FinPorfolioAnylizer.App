@@ -35,12 +35,46 @@ namespace FinPortfolioAnalyzer.Data
     {
         public CustomerInfo CustomerInfo { get; set; } = new();
 
+        public List<FinancialGoal> FinancialGoals { get; set; } = new();
+
         public List<Asset> Assets { get; set; } = new();
     }
 
     public class CustomerInfo
     {
         public int Age { get; set; }
+
+        public RiskTolerance RiskTolerance { get; set; }
+
+        public MoneyValue AnnualIncome { get; set; }
+        public MoneyValue MonthlyExpenses { get; set; }
+        public MoneyValue TotalLiabilities { get; set; }
+    }
+
+    public class MoneyValue
+    {
+        public MoneyValue() {
+            Amount = 0;
+            Currency = Currency.USD;
+        }
+
+        public MoneyValue(decimal amount, Currency currency)
+        {
+            Amount = amount;
+            Currency = currency;
+        }
+
+        public decimal Amount { get; set; }
+        public Currency Currency { get; set; }
+    }
+
+    public class FinancialGoal
+    {
+        public string GoalName { get; set; }
+        public MoneyValue TargetAmount { get; set; }
+
+        public DateTime? TargetDate { get; set; } = DateTime.UtcNow;
+        public int PriorityLevel { get; set; }
     }
 
     public enum Region
@@ -52,21 +86,26 @@ namespace FinPortfolioAnalyzer.Data
         Asia
     }
 
+    public enum RiskTolerance
+    {
+        Low,
+        Medium,
+        High
+    }
+
     public class Asset
     {
         public string Name { get; set; }
         public AssetType AssetType { get; set; }
         public TermOfAsset TermOfAsset { get; set; }
-        public Currency Currency { get; set; }
         public Region Region { get; set; }
-        public decimal Amount { get; set; }
+        public MoneyValue Amount { get; set; }
 
-        public Asset(string name, AssetType assetType, TermOfAsset termOfAsset, Currency currency, Region region, decimal amount)
+        public Asset(string name, AssetType assetType, TermOfAsset termOfAsset, Region region, MoneyValue amount)
         {
             Name = name;
             AssetType = assetType;
             TermOfAsset = termOfAsset;
-            Currency = currency;
             Region = region;
             Amount = amount;
         }
