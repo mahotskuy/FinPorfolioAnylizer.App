@@ -39,9 +39,9 @@
                         <MudSelectItem Value="@riskTolerance">@riskTolerance</MudSelectItem>
                     }
                 </MudSelect>
-                <FinPortfolioAnalyzer.Components.Money MoneyValue="@_displayedPortfolio.CustomerInfo.AnnualIncome" Label="AnnualIncome" Variant="Variant.Outlined"></FinPortfolioAnalyzer.Components.Money>
-                <FinPortfolioAnalyzer.Components.Money MoneyValue="@_displayedPortfolio.CustomerInfo.MonthlyExpenses" Label="MonthlyExpenses" Variant="Variant.Outlined"></FinPortfolioAnalyzer.Components.Money>
-                <FinPortfolioAnalyzer.Components.Money MoneyValue="@_displayedPortfolio.CustomerInfo.TotalLiabilities" Label="TotalLiabilities" Variant="Variant.Outlined"></FinPortfolioAnalyzer.Components.Money>
+                <FinPortfolioAnalyzer.Components.Money MoneyValue="@_displayedPortfolio.CustomerInfo.AnnualIncome" Label="Annual Income" Variant="Variant.Outlined"></FinPortfolioAnalyzer.Components.Money>
+                <FinPortfolioAnalyzer.Components.Money MoneyValue="@_displayedPortfolio.CustomerInfo.MonthlyExpenses" Label="Monthly Expenses" Variant="Variant.Outlined"></FinPortfolioAnalyzer.Components.Money>
+                <FinPortfolioAnalyzer.Components.Money MoneyValue="@_displayedPortfolio.CustomerInfo.TotalLiabilities" Label="Total Liabilities" Variant="Variant.Outlined"></FinPortfolioAnalyzer.Components.Money>
             </MudTabPanel>
             <MudTabPanel Text="Financial Goals">
                 <MudText Typo="Typo.h5">Financial Goals</MudText>
@@ -58,7 +58,7 @@
                             <MudTextField @bind-Value="@goal.GoalName" Immediate="true" Variant="Variant.Text" />
                         </MudTd>
                         <MudTd>
-                            <FinPortfolioAnalyzer.Components.Money MoneyValue="@goal.TargetAmount" Label="TargetAmount"></FinPortfolioAnalyzer.Components.Money>
+                            <FinPortfolioAnalyzer.Components.Money MoneyValue="@goal.TargetAmount" Label="Target Amount"></FinPortfolioAnalyzer.Components.Money>
                         </MudTd>
                         <MudTd>
                             <MudDatePicker @bind-Date="@goal.TargetDate" />

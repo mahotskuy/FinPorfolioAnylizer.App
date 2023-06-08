@@ -33,7 +33,6 @@ namespace FinPortfolioAnalyzer.Data
                 $"- returns of the portfolio\\n" +
                 $"Don't specify list of assets in portfolio as person knows about it." +
                 $"Calculate what financial goals I can achieve if follows current strategy.\n" +
-                //$"Calculate what amount of money I will have if continue following my current the strategy and how much money I can have if change the strategy with your improvements.\n" +
                 $"Use your prediction on inflation in USA and in {portfolio.CustomerInfo.Country} \n" +
                 $"Here is platform prediction {JsonConvert.SerializeObject(new AnalyzerPredictionData(), settings)}" +
                 $" and schema with descriptions: {schemaGenerator.Generate(typeof(AnalyzerPredictionData))}" +
