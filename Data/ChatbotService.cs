@@ -18,7 +18,7 @@ public class ChatbotService
         var chatRequest = new ChatRequest()
         {
             Temperature = 0,
-            Model = Model.ChatGPTTurbo,
+            Model = Model.GPT4,
             Messages = new List<ChatMessage>
             {
                 new ChatMessage
