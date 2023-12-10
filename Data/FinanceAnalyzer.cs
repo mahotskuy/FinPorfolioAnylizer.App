@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FinPortfolioAnalyzer.Data.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Schema;
 using Newtonsoft.Json.Schema.Generation;
