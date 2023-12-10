@@ -1,4 +1,4 @@
-﻿namespace FinPortfolioAnalyzer.Data
+﻿namespace FinPortfolioAnalyzer.Data.Enums
 {
     public enum RiskTolerance
     {

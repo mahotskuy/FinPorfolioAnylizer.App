@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Text.Json.Serialization;
+using FinPortfolioAnalyzer.Data.Enums;
 
 namespace FinPortfolioAnalyzer.Data.Models
 {
